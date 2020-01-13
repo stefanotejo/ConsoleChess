@@ -16,5 +16,10 @@ namespace ConsoleChess.GameBoard
             Columns = columns;
             Pieces = new GamePiece[rows, columns];
         }
+
+        public GamePiece GetPiece(int row, int column)
+        {
+            return Pieces[row, column];
+        }
     }
 }
