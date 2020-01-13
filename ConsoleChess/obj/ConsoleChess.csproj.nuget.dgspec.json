@@ -1,0 +1,64 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\stefa\\Documents\\WORKSPACE\\ws-vsc-2019\\Curso C# - Projetos\\ConsoleChess\\ConsoleChess\\ConsoleChess.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\stefa\\Documents\\WORKSPACE\\ws-vsc-2019\\Curso C# - Projetos\\ConsoleChess\\ConsoleChess\\ConsoleChess.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\stefa\\Documents\\WORKSPACE\\ws-vsc-2019\\Curso C# - Projetos\\ConsoleChess\\ConsoleChess\\ConsoleChess.csproj",
+        "projectName": "ConsoleChess",
+        "projectPath": "C:\\Users\\stefa\\Documents\\WORKSPACE\\ws-vsc-2019\\Curso C# - Projetos\\ConsoleChess\\ConsoleChess\\ConsoleChess.csproj",
+        "packagesPath": "C:\\Users\\stefa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\stefa\\Documents\\WORKSPACE\\ws-vsc-2019\\Curso C# - Projetos\\ConsoleChess\\ConsoleChess\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\stefa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
