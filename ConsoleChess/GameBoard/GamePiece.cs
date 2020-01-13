@@ -18,5 +18,10 @@ namespace ConsoleChess.GameBoard
             Board = board;
             NumberOfMovements = 0;
         }
+
+        public void IncrementNumberOfMovements()
+        {
+            NumberOfMovements++;
+        }
     }
 }

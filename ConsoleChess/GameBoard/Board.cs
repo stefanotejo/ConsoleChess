@@ -58,5 +58,17 @@ namespace ConsoleChess.GameBoard
             Pieces[position.Row, position.Column] = piece;
             piece.ActualPosition = position;
         }
+
+        public GamePiece RemovePiece(Position position)
+        {
+            if(GetPiece(position) == null)
+            {
+                return null;
+            }
+            GamePiece aux = GetPiece(position);
+            aux.ActualPosition = null;
+            Pieces[position.Row, position.Column] = null;
+            return aux;
+        }
     }
 }

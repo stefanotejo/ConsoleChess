@@ -10,14 +10,9 @@ namespace ConsoleChess
         {
             try
             {
-                Board board = new Board(8, 8);
+                ChessMatch match = new ChessMatch();
 
-                board.PlacePiece(new Rook(board, Color.Black), new Position(0, 0));
-                board.PlacePiece(new Rook(board, Color.White), new Position(2, 4));
-                board.PlacePiece(new King(board, Color.Black), new Position(2, 6));
-                board.PlacePiece(new King(board, Color.White), new Position(3, 5));
-
-                Screen.PrintBoard(board);
+                Screen.PrintBoard(match.Board);
             }
             catch(BoardException e)
             {
