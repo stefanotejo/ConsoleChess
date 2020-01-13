@@ -11,6 +11,13 @@ namespace ConsoleChess.Chess
         {
         }
 
+        public override bool[,] PossibleMoves()
+        {
+            bool[,] matrix = new bool[Board.Rows, Board.Columns];
+
+            return matrix;
+        }
+
         public override string ToString()
         {
             return "B";

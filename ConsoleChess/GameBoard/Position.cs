@@ -15,9 +15,15 @@ namespace ConsoleChess.GameBoard
             Column = column;
         }
 
+        public void Redefine(int row, int column) // Auxiliary method to be used in the PossibleMoves() methods
+        {
+            Row = row;
+            Column = column;
+        }
+
         public override string ToString()
         {
-            return $"[{Row}, {Column}]";
+            return $"{Row}, {Column}";
         }
     }
 }

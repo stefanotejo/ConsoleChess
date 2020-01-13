@@ -19,7 +19,7 @@ namespace ConsoleChess.GameBoard
 
         public bool IsValidPosition(Position position)
         {
-            if(position.Row < 0 || position.Row >= Rows || position.Column < 0 || position.Column > Columns)
+            if(position.Row < 0 || position.Row >= Rows || position.Column < 0 || position.Column >= Columns)
             {
                 return false;
             }
@@ -56,7 +56,7 @@ namespace ConsoleChess.GameBoard
                 throw new BoardException("ERROR: There is already a game piece at this position");
             }
             Pieces[position.Row, position.Column] = piece;
-            piece.ActualPosition = position;
+            piece.Position = position;
         }
 
         public GamePiece RemovePiece(Position position)
@@ -66,7 +66,7 @@ namespace ConsoleChess.GameBoard
                 return null;
             }
             GamePiece aux = GetPiece(position);
-            aux.ActualPosition = null;
+            aux.Position = null;
             Pieces[position.Row, position.Column] = null;
             return aux;
         }
