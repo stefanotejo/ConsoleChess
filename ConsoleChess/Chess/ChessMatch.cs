@@ -8,8 +8,8 @@ namespace ConsoleChess.Chess
     class ChessMatch
     {
         public Board Board { get; private set; }
-        private int Round { get; set; }
-        private Color CurrentPlayer { get; set; }
+        public int Round { get; private set; }
+        public Color CurrentPlayer { get; private set; }
         public bool Finished { get; set; }
 
         public ChessMatch()
@@ -38,12 +38,48 @@ namespace ConsoleChess.Chess
             Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('e', 2).ToPosition());
         }
 
-        public void PerformMove(Position origin, Position destiny)
+        private void SwitchPlayer()
+        {
+            if (CurrentPlayer == Color.White) CurrentPlayer = Color.Black;
+            else CurrentPlayer = Color.White;
+        }
+        private void PerformMove(Position origin, Position destiny)
         {
             GamePiece piece = Board.RemovePiece(origin);
             piece.IncrementNumberOfMovements();
             GamePiece capturedPiece = Board.RemovePiece(destiny);
             Board.PlacePiece(piece, destiny);
+        }
+
+        public void Play(Position origin, Position destiny)
+        {
+            PerformMove(origin, destiny);
+            Round++;
+            SwitchPlayer();
+        }
+
+        public void ValidateOriginPosition(Position origin)
+        {
+            if (Board.GetPiece(origin) == null)
+            {
+                throw new BoardException("ERROR: There is no piece in chosen origin position");
+            }
+            if(CurrentPlayer != Board.GetPiece(origin).Color)
+            {
+                throw new BoardException("ERROR: Piece in chosen origin position belongs to the other player");
+            }
+            if(!Board.GetPiece(origin).AreTherePossibleMoves())
+            {
+                throw new BoardException("ERROR: There are no possible moves for the piece in chosen origin position");
+            }
+        }
+
+        public void ValidateDestinyPosition(Position origin, Position destiny)
+        {
+            if (!Board.GetPiece(origin).CanMoveToPosition(destiny))
+            {
+                throw new BoardException("ERROR: Destiny position is invalid");
+            }
         }
     }
 }
