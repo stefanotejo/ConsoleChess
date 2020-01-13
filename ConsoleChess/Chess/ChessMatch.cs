@@ -10,6 +10,7 @@ namespace ConsoleChess.Chess
         public Board Board { get; private set; }
         private int Round { get; set; }
         private Color CurrentPlayer { get; set; }
+        public bool Finished { get; set; }
 
         public ChessMatch()
         {
