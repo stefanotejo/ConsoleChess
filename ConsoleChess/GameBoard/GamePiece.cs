@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ConsoleChess.GameBoard
+{
+    class GamePiece
+    {
+        public Position ActualPosition { get; set; }
+        public Color Color { get; protected set; }
+        public Board Board { get; protected set; }
+        public int NumberOfMovements { get; protected set; }
+
+        public GamePiece(Position actualPosition, Color color, Board board)
+        {
+            ActualPosition = actualPosition;
+            Color = color;
+            Board = board;
+            NumberOfMovements = 0;
+        }
+    }
+}
