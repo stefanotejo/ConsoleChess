@@ -8,6 +8,55 @@ namespace ConsoleChess
 {
     class Screen
     {
+        public static void PrintMatch(ChessMatch match)
+        {
+            PrintBoard(match.Board);
+            Console.WriteLine();
+            PrintCapturedPieces(match);
+            Console.WriteLine();
+            Console.WriteLine($"Round: {match.Round}");
+            Console.WriteLine($"Waiting for {match.CurrentPlayer} player's move...");
+        }
+
+        public static void PrintMatch(ChessMatch match, bool[,] possibleMoves)
+        {
+            PrintBoard(match.Board, possibleMoves);
+            Console.WriteLine();
+            PrintCapturedPieces(match);
+            Console.WriteLine();
+            Console.WriteLine($"Round: {match.Round}");
+            Console.WriteLine($"Waiting for {match.CurrentPlayer} player's move...");
+        }
+
+        public static void PrintCapturedPieces(ChessMatch match)
+        {
+            Console.WriteLine("Captured pieces:");
+
+            Console.Write("White: ");
+            PrintSet(match.GetCapturedPiecesByColor(Color.White));
+            Console.WriteLine();
+
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+
+            Console.Write("Black: ");
+            PrintSet(match.GetCapturedPiecesByColor(Color.Black));
+            Console.WriteLine();
+
+            Console.ForegroundColor = aux;
+        }
+
+        public static void PrintSet(HashSet<GamePiece> set)
+        {
+            Console.Write("[");
+
+            foreach(GamePiece piece in set)
+            {
+                Console.Write(piece + " ");
+            }
+            Console.Write("]");
+        }
+
         public static void PrintBoard(Board board)
         {
             for (int i = 0; i < board.Rows; i++)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ConsoleChess.GameBoard;
+using ConsoleChess.Chess;
 
 namespace ConsoleChess.Chess
 {
@@ -11,31 +12,42 @@ namespace ConsoleChess.Chess
         public int Round { get; private set; }
         public Color CurrentPlayer { get; private set; }
         public bool Finished { get; set; }
+        private HashSet<GamePiece> Pieces { get; set; }
+        private HashSet<GamePiece> CapturedPieces { get; set; }
 
         public ChessMatch()
         {
             Board = new Board(8, 8);
             Round = 1;
             CurrentPlayer = Color.White;
+            Pieces = new HashSet<GamePiece>();
+            CapturedPieces = new HashSet<GamePiece>();
 
             SetBoard();
         }
 
+        private void PlaceNewPiece(GamePiece piece, char column, int row)
+        {
+            Board.PlacePiece(piece, new ChessPosition(column, row).ToPosition());
+            Pieces.Add(piece);
+        }
+
         private void SetBoard()
         {
-            Board.PlacePiece(new Rook(Board, Color.Black), new ChessPosition('c', 8).ToPosition());
-            Board.PlacePiece(new King(Board, Color.Black), new ChessPosition('d', 8).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.Black), new ChessPosition('e', 8).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.Black), new ChessPosition('c', 7).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.Black), new ChessPosition('d', 7).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.Black), new ChessPosition('e', 7).ToPosition());
-
-            Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('c', 1).ToPosition());
-            Board.PlacePiece(new King(Board, Color.White), new ChessPosition('d', 1).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('e', 1).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('c', 2).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('d', 2).ToPosition());
-            Board.PlacePiece(new Rook(Board, Color.White), new ChessPosition('e', 2).ToPosition());
+            // Black side
+            PlaceNewPiece(new Rook(Board, Color.Black), 'c', 8);
+            PlaceNewPiece(new King(Board, Color.Black), 'd', 8);
+            PlaceNewPiece(new Rook(Board, Color.Black), 'e', 8);
+            PlaceNewPiece(new Rook(Board, Color.Black), 'c', 7);
+            PlaceNewPiece(new Rook(Board, Color.Black), 'd', 7);
+            PlaceNewPiece(new Rook(Board, Color.Black), 'e', 7);
+            // White side
+            PlaceNewPiece(new Rook(Board, Color.White), 'c', 1);
+            PlaceNewPiece(new King(Board, Color.White), 'd', 1);
+            PlaceNewPiece(new Rook(Board, Color.White), 'e', 1);
+            PlaceNewPiece(new Rook(Board, Color.White), 'c', 2);
+            PlaceNewPiece(new Rook(Board, Color.White), 'd', 2);
+            PlaceNewPiece(new Rook(Board, Color.White), 'e', 2);
         }
 
         private void SwitchPlayer()
@@ -49,6 +61,31 @@ namespace ConsoleChess.Chess
             piece.IncrementNumberOfMovements();
             GamePiece capturedPiece = Board.RemovePiece(destiny);
             Board.PlacePiece(piece, destiny);
+
+            if (capturedPiece != null) CapturedPieces.Add(capturedPiece);
+        }
+
+        public HashSet<GamePiece> GetCapturedPiecesByColor(Color color)
+        {
+            HashSet<GamePiece> returnHash = new HashSet<GamePiece>();
+
+            foreach(GamePiece piece in CapturedPieces)
+            {
+                if(piece.Color == color) returnHash.Add(piece);
+            }
+            return returnHash;
+        }
+
+        public HashSet<GamePiece> GetPiecesInGameByColor(Color color)
+        {
+            HashSet<GamePiece> returnHash = new HashSet<GamePiece>();
+
+            foreach (GamePiece piece in Pieces)
+            {
+                if (piece.Color == color) returnHash.Add(piece);
+            }
+            returnHash.ExceptWith(GetCapturedPiecesByColor(color));
+            return returnHash;
         }
 
         public void Play(Position origin, Position destiny)

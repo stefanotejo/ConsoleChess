@@ -17,10 +17,7 @@ namespace ConsoleChess
                     try
                     {
                         Console.Clear();
-                        Screen.PrintBoard(match.Board);
-                        Console.WriteLine();
-                        Console.WriteLine($"Round: {match.Round}");
-                        Console.WriteLine($"Waiting for {match.CurrentPlayer} player's move...");
+                        Screen.PrintMatch(match);
 
                         Console.WriteLine();
                         Console.Write("Input origin: ");
@@ -30,10 +27,7 @@ namespace ConsoleChess
                         bool[,] possibleMoves = match.Board.GetPiece(origin).PossibleMoves();
 
                         Console.Clear();
-                        Screen.PrintBoard(match.Board, possibleMoves);
-                        Console.WriteLine();
-                        Console.WriteLine($"Round: {match.Round}");
-                        Console.WriteLine($"Waiting for {match.CurrentPlayer} player's move...");
+                        Screen.PrintMatch(match, possibleMoves);
 
                         Console.WriteLine();
                         Console.Write("Input destiny: ");
