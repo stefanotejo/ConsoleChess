@@ -11,9 +11,9 @@ namespace ConsoleChess.GameBoard
         public Board Board { get; protected set; }
         public int NumberOfMovements { get; protected set; }
 
-        public GamePiece(Position actualPosition, Color color, Board board)
+        public GamePiece(Color color, Board board)
         {
-            ActualPosition = actualPosition;
+            ActualPosition = null;
             Color = color;
             Board = board;
             NumberOfMovements = 0;

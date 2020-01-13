@@ -19,7 +19,7 @@ namespace ConsoleChess
                     }
                     else
                     {
-                        Console.WriteLine(board.GetPiece(i, j) + " ");
+                        Console.Write(board.GetPiece(i, j) + " ");
                     }
                 }
 

@@ -21,5 +21,11 @@ namespace ConsoleChess.GameBoard
         {
             return Pieces[row, column];
         }
+
+        public void PlacePiece(GamePiece piece, Position position)
+        {
+            Pieces[position.Row, position.Column] = piece;
+            piece.ActualPosition = position;
+        }
     }
 }
