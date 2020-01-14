@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ConsoleChess.GameBoard;
+﻿using ConsoleChess.GameBoard;
 
 namespace ConsoleChess.Chess
 {
