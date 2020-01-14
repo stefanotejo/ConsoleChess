@@ -7,8 +7,11 @@ namespace ConsoleChess.Chess
 {
     class Pawn : GamePiece
     {
-        public Pawn(Board board, Color color) : base(color, board)
+        private ChessMatch Match { get; set; }
+
+        public Pawn(Board board, Color color, ChessMatch match) : base(color, board)
         {
+            Match = match;
         }
 
         private bool CanMove(Position position)
@@ -59,6 +62,23 @@ namespace ConsoleChess.Chess
                 {
                     matrix[position.Row, position.Column] = true;
                 }
+
+                // SPECIAL MOVE: En Passent (for White pawns)
+                if (Position.Row == 3) // White pawns can only perform En Passent from this line
+                {
+                    // Verify left position
+                    Position leftPos = new Position(Position.Row, Position.Column - 1);
+                    if(Board.IsValidPosition(leftPos) && IsThereEnemyInPosition(leftPos) && Board.GetPiece(leftPos) == Match.EnPassentTarget)
+                    {
+                        matrix[leftPos.Row - 1, leftPos.Column] = true;
+                    }
+                    Position rightPos = new Position(Position.Row, Position.Column + 1);
+                    // Verify right position
+                    if (Board.IsValidPosition(rightPos) && IsThereEnemyInPosition(rightPos) && Board.GetPiece(rightPos) == Match.EnPassentTarget)
+                    {
+                        matrix[rightPos.Row - 1, rightPos.Column] = true;
+                    }
+                }
             }
             else
             {
@@ -85,6 +105,23 @@ namespace ConsoleChess.Chess
                 if (Board.IsValidPosition(position) && IsThereEnemyInPosition(position))
                 {
                     matrix[position.Row, position.Column] = true;
+                }
+
+                // SPECIAL MOVE: En Passent (for Black pawns)
+                if (Position.Row == 4) // Black pawns can only perform En Passent from this line
+                {
+                    // Verify left position
+                    Position leftPos = new Position(Position.Row, Position.Column - 1);
+                    if (Board.IsValidPosition(leftPos) && IsThereEnemyInPosition(leftPos) && Board.GetPiece(leftPos) == Match.EnPassentTarget)
+                    {
+                        matrix[leftPos.Row + 1, leftPos.Column] = true;
+                    }
+                    Position rightPos = new Position(Position.Row, Position.Column + 1);
+                    // Verify right position
+                    if (Board.IsValidPosition(rightPos) && IsThereEnemyInPosition(rightPos) && Board.GetPiece(rightPos) == Match.EnPassentTarget)
+                    {
+                        matrix[rightPos.Row + 1, rightPos.Column] = true;
+                    }
                 }
             }
 

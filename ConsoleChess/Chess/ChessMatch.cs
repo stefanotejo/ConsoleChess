@@ -15,6 +15,7 @@ namespace ConsoleChess.Chess
         private HashSet<GamePiece> Pieces { get; set; }
         private HashSet<GamePiece> CapturedPieces { get; set; }
         public bool Check { get; private set; }
+        public GamePiece EnPassentTarget { get; private set; }
 
         public ChessMatch()
         {
@@ -24,6 +25,7 @@ namespace ConsoleChess.Chess
             Pieces = new HashSet<GamePiece>();
             CapturedPieces = new HashSet<GamePiece>();
             Check = false;
+            EnPassentTarget = null;
 
             SetBoard();
         }
@@ -46,14 +48,14 @@ namespace ConsoleChess.Chess
             PlaceNewPiece(new Bishop(Board, Color.White), 'f', 1);
             PlaceNewPiece(new Knight(Board, Color.White), 'g', 1);
             PlaceNewPiece(new Rook(Board, Color.White), 'h', 1);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'a', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'b', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'c', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'd', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'e', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'f', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'g', 2);
-            PlaceNewPiece(new Pawn(Board, Color.White), 'h', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'a', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'b', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'c', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'd', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'e', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'f', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'g', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White, this), 'h', 2);
 
             // Black side
             PlaceNewPiece(new Rook(Board, Color.Black), 'a', 8);
@@ -64,14 +66,14 @@ namespace ConsoleChess.Chess
             PlaceNewPiece(new Bishop(Board, Color.Black), 'f', 8);
             PlaceNewPiece(new Knight(Board, Color.Black), 'g', 8);
             PlaceNewPiece(new Rook(Board, Color.Black), 'h', 8);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'a', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'b', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'c', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'd', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'e', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'f', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'g', 7);
-            PlaceNewPiece(new Pawn(Board, Color.Black), 'h', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'a', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'b', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'c', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'd', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'e', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'f', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'g', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black, this), 'h', 7);
         }
 
         private Color Adversary(Color color)
@@ -106,7 +108,7 @@ namespace ConsoleChess.Chess
 
             // SPECIAL MOVES:
 
-            // Lesser Castling:
+            // Lesser Castling
             if (piece is King && destiny.Column == origin.Column + 2)
             {
                 Position rookOrigin = new Position(origin.Row, origin.Column + 3);
@@ -126,8 +128,26 @@ namespace ConsoleChess.Chess
                 Board.PlacePiece(rook, rookDestiny);
             }
 
-            return capturedPiece;
+            // En Passent
+            if (piece is Pawn)
+            {
+                if (destiny.Column != origin.Column && capturedPiece == null)
+                {
+                    Position targetPawnPosition;
+                    if(piece.Color == Color.White)
+                    {
+                        targetPawnPosition = new Position(destiny.Row + 1, destiny.Column);
+                    }
+                    else
+                    {
+                        targetPawnPosition = new Position(destiny.Row - 1, destiny.Column);
+                    }
+                    capturedPiece = Board.RemovePiece(targetPawnPosition);
+                    CapturedPieces.Add(capturedPiece);
+                }
+            }
 
+            return capturedPiece;
         }
 
         private void UndoMove(Position origin, Position destiny, GamePiece capturedPiece)
@@ -144,7 +164,7 @@ namespace ConsoleChess.Chess
 
             // SPECIAL MOVES:
 
-            // Lesser Castling:
+            // Lesser Castling
             if (piece is King && destiny.Column == origin.Column + 2)
             {
                 Position rookOrigin = new Position(origin.Row, origin.Column + 3);
@@ -153,7 +173,7 @@ namespace ConsoleChess.Chess
                 rook.DecrementNumberOfMovements();
                 Board.PlacePiece(rook, rookOrigin);
             }
-            // Lesser Castling:
+            // Lesser Castling
             if (piece is King && destiny.Column == origin.Column - 2)
             {
                 Position rookOrigin = new Position(origin.Row, origin.Column - 4);
@@ -161,6 +181,24 @@ namespace ConsoleChess.Chess
                 GamePiece rook = Board.RemovePiece(rookDestiny);
                 rook.DecrementNumberOfMovements();
                 Board.PlacePiece(rook, rookOrigin);
+            }
+            // En Passent
+            if (piece is Pawn)
+            {
+                if (destiny.Column != origin.Column && capturedPiece == EnPassentTarget)
+                {
+                    GamePiece targetPawn = Board.RemovePiece(destiny);
+                    Position targetPawnPosition;
+                    if (piece.Color == Color.White)
+                    {
+                        targetPawnPosition = new Position(3, destiny.Column);
+                    }
+                    else
+                    {
+                        targetPawnPosition = new Position(4, destiny.Column);
+                    }
+                    Board.PlacePiece(targetPawn, targetPawnPosition);
+                }
             }
         }
 
@@ -265,6 +303,18 @@ namespace ConsoleChess.Chess
             {
                 Round++;
                 SwitchPlayer();
+            }
+
+            GamePiece piece = Board.GetPiece(destiny);
+
+            // SPECIAL MOVE: En Passent
+            if(piece is Pawn && (destiny.Row == origin.Row - 2 || destiny.Row == origin.Row + 2))
+            {
+                EnPassentTarget = piece;
+            }
+            else
+            {
+                EnPassentTarget = null;
             }
         }
 
