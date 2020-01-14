@@ -16,6 +16,11 @@ namespace ConsoleChess
             Console.WriteLine();
             Console.WriteLine($"Round: {match.Round}");
             Console.WriteLine($"Waiting for {match.CurrentPlayer} player's move...");
+
+            if (match.Check)
+            {
+                Console.WriteLine("CHECK!");
+            }
         }
 
         public static void PrintMatch(ChessMatch match, bool[,] possibleMoves)
@@ -26,6 +31,11 @@ namespace ConsoleChess
             Console.WriteLine();
             Console.WriteLine($"Round: {match.Round}");
             Console.WriteLine($"Waiting for {match.CurrentPlayer} player's move...");
+
+            if (match.Check)
+            {
+                Console.WriteLine("CHECK!");
+            }
         }
 
         public static void PrintCapturedPieces(ChessMatch match)

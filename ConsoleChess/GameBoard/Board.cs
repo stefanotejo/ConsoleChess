@@ -19,7 +19,7 @@ namespace ConsoleChess.GameBoard
 
         public bool IsValidPosition(Position position)
         {
-            if(position.Row < 0 || position.Row >= Rows || position.Column < 0 || position.Column >= Columns)
+            if (position.Row < 0 || position.Row >= Rows || position.Column < 0 || position.Column >= Columns)
             {
                 return false;
             }
@@ -28,7 +28,7 @@ namespace ConsoleChess.GameBoard
 
         public void ValidatePosition(Position position)
         {
-            if(!IsValidPosition(position))
+            if (!IsValidPosition(position))
             {
                 throw new BoardException("ERROR: Invalid position");
             }
@@ -51,7 +51,7 @@ namespace ConsoleChess.GameBoard
 
         public void PlacePiece(GamePiece piece, Position position)
         {
-            if(IsThereGamePiece(position))
+            if (IsThereGamePiece(position))
             {
                 throw new BoardException("ERROR: There is already a game piece at this position");
             }
@@ -61,7 +61,7 @@ namespace ConsoleChess.GameBoard
 
         public GamePiece RemovePiece(Position position)
         {
-            if(GetPiece(position) == null)
+            if (GetPiece(position) == null)
             {
                 return null;
             }

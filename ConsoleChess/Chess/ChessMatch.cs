@@ -14,6 +14,7 @@ namespace ConsoleChess.Chess
         public bool Finished { get; set; }
         private HashSet<GamePiece> Pieces { get; set; }
         private HashSet<GamePiece> CapturedPieces { get; set; }
+        public bool Check { get; private set; }
 
         public ChessMatch()
         {
@@ -22,6 +23,7 @@ namespace ConsoleChess.Chess
             CurrentPlayer = Color.White;
             Pieces = new HashSet<GamePiece>();
             CapturedPieces = new HashSet<GamePiece>();
+            Check = false;
 
             SetBoard();
         }
@@ -50,12 +52,28 @@ namespace ConsoleChess.Chess
             PlaceNewPiece(new Rook(Board, Color.White), 'e', 2);
         }
 
+        private Color Adversary(Color color)
+        {
+            if (color == Color.White) return Color.Black;
+            return Color.White;
+        }
+
+        private GamePiece GetKing(Color color)
+        {
+            foreach(GamePiece piece in GetPiecesInGameByColor(color))
+            {
+                if (piece is King) return piece;
+            }
+            return null;
+        }
+
         private void SwitchPlayer()
         {
             if (CurrentPlayer == Color.White) CurrentPlayer = Color.Black;
             else CurrentPlayer = Color.White;
         }
-        private void PerformMove(Position origin, Position destiny)
+
+        private GamePiece PerformMove(Position origin, Position destiny)
         {
             GamePiece piece = Board.RemovePiece(origin);
             piece.IncrementNumberOfMovements();
@@ -63,6 +81,43 @@ namespace ConsoleChess.Chess
             Board.PlacePiece(piece, destiny);
 
             if (capturedPiece != null) CapturedPieces.Add(capturedPiece);
+
+            return capturedPiece;
+        }
+
+        private void UndoMove(Position origin, Position destiny, GamePiece capturedPiece)
+        {
+            GamePiece piece = Board.RemovePiece(destiny);
+            piece.DecrementNumberOfMovements();
+
+            if (capturedPiece != null)
+            {
+                Board.PlacePiece(capturedPiece, destiny);
+                CapturedPieces.Remove(capturedPiece);
+            }
+            Board.PlacePiece(piece, origin);
+        }
+
+        public bool isInCheck(Color color)
+        {
+            GamePiece king = GetKing(color);
+
+            if (king == null)
+            {
+                throw new BoardException($"ERROR: There is no {color} king");
+            }
+
+            foreach(GamePiece piece in GetPiecesInGameByColor(Adversary(color)))
+            {
+                bool[,] matrix = piece.PossibleMoves();
+
+                if (matrix[king.Position.Row, king.Position.Column])
+                {
+                    // This means the adversary piece can reach the king
+                    return true;
+                }
+            }
+            return false;
         }
 
         public HashSet<GamePiece> GetCapturedPiecesByColor(Color color)
@@ -71,7 +126,7 @@ namespace ConsoleChess.Chess
 
             foreach(GamePiece piece in CapturedPieces)
             {
-                if(piece.Color == color) returnHash.Add(piece);
+                if (piece.Color == color) returnHash.Add(piece);
             }
             return returnHash;
         }
@@ -90,7 +145,21 @@ namespace ConsoleChess.Chess
 
         public void Play(Position origin, Position destiny)
         {
-            PerformMove(origin, destiny);
+            GamePiece capturedPiece = PerformMove(origin, destiny);
+
+            if (isInCheck(CurrentPlayer))
+            {
+                UndoMove(origin, destiny, capturedPiece);
+                throw new BoardException("ERROR: A player may not put his own king in check or remain in check");
+            }
+            if (isInCheck(Adversary(CurrentPlayer))) {
+                Check = true;
+            }
+            else
+            {
+                Check = false;
+            }
+
             Round++;
             SwitchPlayer();
         }
@@ -101,11 +170,11 @@ namespace ConsoleChess.Chess
             {
                 throw new BoardException("ERROR: There is no piece in chosen origin position");
             }
-            if(CurrentPlayer != Board.GetPiece(origin).Color)
+            if (CurrentPlayer != Board.GetPiece(origin).Color)
             {
                 throw new BoardException("ERROR: Piece in chosen origin position belongs to the other player");
             }
-            if(!Board.GetPiece(origin).AreTherePossibleMoves())
+            if (!Board.GetPiece(origin).AreTherePossibleMoves())
             {
                 throw new BoardException("ERROR: There are no possible moves for the piece in chosen origin position");
             }
