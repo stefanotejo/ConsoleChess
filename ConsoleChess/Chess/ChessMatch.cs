@@ -36,28 +36,42 @@ namespace ConsoleChess.Chess
 
         private void SetBoard()
         {
-            PlaceNewPiece(new King(Board, Color.Black), 'a', 8);
-            PlaceNewPiece(new Rook(Board, Color.Black), 'b', 8);
 
-            PlaceNewPiece(new Rook(Board, Color.White), 'h', 7);
-            PlaceNewPiece(new Rook(Board, Color.White), 'c', 1);
-            PlaceNewPiece(new King(Board, Color.White), 'd', 1);
-            // Black side
-            /*
-            PlaceNewPiece(new Rook(Board, Color.Black), 'c', 8);
-            PlaceNewPiece(new King(Board, Color.Black), 'd', 8);
-            PlaceNewPiece(new Rook(Board, Color.Black), 'e', 8);
-            PlaceNewPiece(new Rook(Board, Color.Black), 'c', 7);
-            PlaceNewPiece(new Rook(Board, Color.Black), 'd', 7);
-            PlaceNewPiece(new Rook(Board, Color.Black), 'e', 7);
             // White side
-            PlaceNewPiece(new Rook(Board, Color.White), 'c', 1);
-            PlaceNewPiece(new King(Board, Color.White), 'd', 1);
-            PlaceNewPiece(new Rook(Board, Color.White), 'e', 1);
-            PlaceNewPiece(new Rook(Board, Color.White), 'c', 2);
-            PlaceNewPiece(new Rook(Board, Color.White), 'd', 2);
-            PlaceNewPiece(new Rook(Board, Color.White), 'e', 2);
-            */
+            PlaceNewPiece(new Rook(Board, Color.White), 'a', 1);
+            PlaceNewPiece(new Knight(Board, Color.White), 'b', 1);
+            PlaceNewPiece(new Bishop(Board, Color.White), 'c', 1);
+            PlaceNewPiece(new Queen(Board, Color.White), 'd', 1);
+            PlaceNewPiece(new King(Board, Color.White), 'e', 1);
+            PlaceNewPiece(new Bishop(Board, Color.White), 'f', 1);
+            PlaceNewPiece(new Knight(Board, Color.White), 'g', 1);
+            PlaceNewPiece(new Rook(Board, Color.White), 'h', 1);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'a', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'b', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'c', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'd', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'e', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'f', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'g', 2);
+            PlaceNewPiece(new Pawn(Board, Color.White), 'h', 2);
+
+            // Black side
+            PlaceNewPiece(new Rook(Board, Color.Black), 'a', 8);
+            PlaceNewPiece(new Knight(Board, Color.Black), 'b', 8);
+            PlaceNewPiece(new Bishop(Board, Color.Black), 'c', 8);
+            PlaceNewPiece(new Queen(Board, Color.Black), 'd', 8);
+            PlaceNewPiece(new King(Board, Color.Black), 'e', 8);
+            PlaceNewPiece(new Bishop(Board, Color.Black), 'f', 8);
+            PlaceNewPiece(new Knight(Board, Color.Black), 'g', 8);
+            PlaceNewPiece(new Rook(Board, Color.Black), 'h', 8);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'a', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'b', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'c', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'd', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'e', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'f', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'g', 7);
+            PlaceNewPiece(new Pawn(Board, Color.Black), 'h', 7);
         }
 
         private Color Adversary(Color color)
