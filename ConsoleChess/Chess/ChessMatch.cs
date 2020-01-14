@@ -280,6 +280,21 @@ namespace ConsoleChess.Chess
         public void Play(Position origin, Position destiny)
         {
             GamePiece capturedPiece = PerformMove(origin, destiny);
+            GamePiece piece = Board.GetPiece(destiny);
+
+            // SPECIAL MOVE: Promotion
+            if (piece is Pawn)
+            {
+                if ((piece.Color == Color.White && destiny.Row == 0) || (piece.Color == Color.Black && destiny.Row == 7))
+                {
+                    piece = Board.RemovePiece(destiny);
+                    Pieces.Remove(piece);
+                    GamePiece queen = new Queen(Board, piece.Color);
+                    Board.PlacePiece(queen, destiny);
+                    Pieces.Add(queen);
+                }
+
+            }
 
             if (IsInCheck(CurrentPlayer))
             {
@@ -304,8 +319,6 @@ namespace ConsoleChess.Chess
                 Round++;
                 SwitchPlayer();
             }
-
-            GamePiece piece = Board.GetPiece(destiny);
 
             // SPECIAL MOVE: En Passent
             if(piece is Pawn && (destiny.Row == origin.Row - 2 || destiny.Row == origin.Row + 2))
