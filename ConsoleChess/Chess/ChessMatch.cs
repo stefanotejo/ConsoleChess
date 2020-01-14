@@ -36,7 +36,14 @@ namespace ConsoleChess.Chess
 
         private void SetBoard()
         {
+            PlaceNewPiece(new King(Board, Color.Black), 'a', 8);
+            PlaceNewPiece(new Rook(Board, Color.Black), 'b', 8);
+
+            PlaceNewPiece(new Rook(Board, Color.White), 'h', 7);
+            PlaceNewPiece(new Rook(Board, Color.White), 'c', 1);
+            PlaceNewPiece(new King(Board, Color.White), 'd', 1);
             // Black side
+            /*
             PlaceNewPiece(new Rook(Board, Color.Black), 'c', 8);
             PlaceNewPiece(new King(Board, Color.Black), 'd', 8);
             PlaceNewPiece(new Rook(Board, Color.Black), 'e', 8);
@@ -50,6 +57,7 @@ namespace ConsoleChess.Chess
             PlaceNewPiece(new Rook(Board, Color.White), 'c', 2);
             PlaceNewPiece(new Rook(Board, Color.White), 'd', 2);
             PlaceNewPiece(new Rook(Board, Color.White), 'e', 2);
+            */
         }
 
         private Color Adversary(Color color)
@@ -98,7 +106,7 @@ namespace ConsoleChess.Chess
             Board.PlacePiece(piece, origin);
         }
 
-        public bool isInCheck(Color color)
+        private bool IsInCheck(Color color)
         {
             GamePiece king = GetKing(color);
 
@@ -118,6 +126,36 @@ namespace ConsoleChess.Chess
                 }
             }
             return false;
+        }
+
+        private bool IsInCheckmate(Color color)
+        {
+            if (!IsInCheck(color)) return false;
+
+            foreach(GamePiece piece in GetPiecesInGameByColor(color))
+            {
+                bool[,] matrix = piece.PossibleMoves();
+
+                for(int i = 0; i < Board.Rows; i++)
+                {
+                    for(int j = 0; j < Board.Columns; j++)
+                    {
+                        if(matrix[i, j])
+                        {
+                            Position origin = piece.Position;
+                            Position destiny = new Position(i, j);
+                            GamePiece capturedPiece = PerformMove(origin, destiny);
+                            bool checkTest = IsInCheck(color);
+                            UndoMove(origin, destiny, capturedPiece);
+                            if (!checkTest)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
         public HashSet<GamePiece> GetCapturedPiecesByColor(Color color)
@@ -147,12 +185,13 @@ namespace ConsoleChess.Chess
         {
             GamePiece capturedPiece = PerformMove(origin, destiny);
 
-            if (isInCheck(CurrentPlayer))
+            if (IsInCheck(CurrentPlayer))
             {
                 UndoMove(origin, destiny, capturedPiece);
                 throw new BoardException("ERROR: A player may not put his own king in check or remain in check");
             }
-            if (isInCheck(Adversary(CurrentPlayer))) {
+
+            if (IsInCheck(Adversary(CurrentPlayer))) {
                 Check = true;
             }
             else
@@ -160,8 +199,15 @@ namespace ConsoleChess.Chess
                 Check = false;
             }
 
-            Round++;
-            SwitchPlayer();
+            if (IsInCheckmate(Adversary(CurrentPlayer)))
+            {
+                Finished = true;
+            }
+            else
+            {
+                Round++;
+                SwitchPlayer();
+            }
         }
 
         public void ValidateOriginPosition(Position origin)
