@@ -42,7 +42,7 @@ namespace ConsoleChess.Chess
             PlaceNewPiece(new Knight(Board, Color.White), 'b', 1);
             PlaceNewPiece(new Bishop(Board, Color.White), 'c', 1);
             PlaceNewPiece(new Queen(Board, Color.White), 'd', 1);
-            PlaceNewPiece(new King(Board, Color.White), 'e', 1);
+            PlaceNewPiece(new King(Board, Color.White, this), 'e', 1);
             PlaceNewPiece(new Bishop(Board, Color.White), 'f', 1);
             PlaceNewPiece(new Knight(Board, Color.White), 'g', 1);
             PlaceNewPiece(new Rook(Board, Color.White), 'h', 1);
@@ -60,7 +60,7 @@ namespace ConsoleChess.Chess
             PlaceNewPiece(new Knight(Board, Color.Black), 'b', 8);
             PlaceNewPiece(new Bishop(Board, Color.Black), 'c', 8);
             PlaceNewPiece(new Queen(Board, Color.Black), 'd', 8);
-            PlaceNewPiece(new King(Board, Color.Black), 'e', 8);
+            PlaceNewPiece(new King(Board, Color.Black, this), 'e', 8);
             PlaceNewPiece(new Bishop(Board, Color.Black), 'f', 8);
             PlaceNewPiece(new Knight(Board, Color.Black), 'g', 8);
             PlaceNewPiece(new Rook(Board, Color.Black), 'h', 8);
@@ -104,7 +104,30 @@ namespace ConsoleChess.Chess
 
             if (capturedPiece != null) CapturedPieces.Add(capturedPiece);
 
+            // SPECIAL MOVES:
+
+            // Lesser Castling:
+            if (piece is King && destiny.Column == origin.Column + 2)
+            {
+                Position rookOrigin = new Position(origin.Row, origin.Column + 3);
+                Position rookDestiny = new Position(origin.Row, origin.Column + 1);
+                GamePiece rook = Board.RemovePiece(rookOrigin);
+                rook.IncrementNumberOfMovements();
+                Board.PlacePiece(rook, rookDestiny);
+            }
+
+            // Greater Castling
+            if (piece is King && destiny.Column == origin.Column - 2)
+            {
+                Position rookOrigin = new Position(origin.Row, origin.Column - 4);
+                Position rookDestiny = new Position(origin.Row, origin.Column - 1);
+                GamePiece rook = Board.RemovePiece(rookOrigin);
+                rook.IncrementNumberOfMovements();
+                Board.PlacePiece(rook, rookDestiny);
+            }
+
             return capturedPiece;
+
         }
 
         private void UndoMove(Position origin, Position destiny, GamePiece capturedPiece)
@@ -118,6 +141,27 @@ namespace ConsoleChess.Chess
                 CapturedPieces.Remove(capturedPiece);
             }
             Board.PlacePiece(piece, origin);
+
+            // SPECIAL MOVES:
+
+            // Lesser Castling:
+            if (piece is King && destiny.Column == origin.Column + 2)
+            {
+                Position rookOrigin = new Position(origin.Row, origin.Column + 3);
+                Position rookDestiny = new Position(origin.Row, origin.Column + 1);
+                GamePiece rook = Board.RemovePiece(rookDestiny);
+                rook.DecrementNumberOfMovements();
+                Board.PlacePiece(rook, rookOrigin);
+            }
+            // Lesser Castling:
+            if (piece is King && destiny.Column == origin.Column - 2)
+            {
+                Position rookOrigin = new Position(origin.Row, origin.Column - 4);
+                Position rookDestiny = new Position(origin.Row, origin.Column - 1);
+                GamePiece rook = Board.RemovePiece(rookDestiny);
+                rook.DecrementNumberOfMovements();
+                Board.PlacePiece(rook, rookOrigin);
+            }
         }
 
         private bool IsInCheck(Color color)
